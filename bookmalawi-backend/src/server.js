@@ -13,6 +13,12 @@ const adminRoutes = require('./routes/admin');
 const bookingRoutes = require('./routes/bookings');
 const paymentRoutes = require('./routes/payments');
 const reviewRoutes = require('./routes/reviews');
+const loyaltyRoutes = require('./routes/loyalty');
+const couponRoutes = require('./routes/coupons');
+const adsRoutes = require('./routes/ads');
+const supportRoutes = require('./routes/support');
+const partnerRoutes = require('./routes/partner');
+const wishlistRoutes = require('./routes/wishlist');
 
 // Initialize Express app
 const app = express();
@@ -71,6 +77,12 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/loyalty', loyaltyRoutes);
+app.use('/api/coupons', couponRoutes);
+app.use('/api/ads', adsRoutes);
+app.use('/api/support', supportRoutes);
+app.use('/api/partner', partnerRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // Socket.io real-time
 io.on('connection', (socket) => {
@@ -82,6 +94,10 @@ io.on('connection', (socket) => {
       message: data.message,
       timestamp: new Date()
     });
+  });
+
+  socket.on('subscribe_notifications', (userId) => {
+    socket.join(`user_${userId}`);
   });
 
   socket.on('disconnect', () => {
