@@ -58,33 +58,4 @@ router.get('/active', async (req, res) => {
   }
 });
 
-// Update ad (admin only)
-router.put('/:adId', authMiddleware, adminMiddleware, async (req, res) => {
-  try {
-    const { adId } = req.params;
-    const { status, title, description } = req.body;
-
-    const result = await pool.query(
-      `UPDATE ads SET status = $1, title = $2, description = $3 WHERE id = $4
-       RETURNING id, title, status`,
-      [status || 'active', title, description, adId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ status: 'error', message: 'Ad not found' });
-    }
-
-    logger.info(`Ad updated: ${adId}`);
-
-    res.json({
-      status: 'success',
-      message: 'Ad updated successfully',
-      ad: result.rows[0]
-    });
-  } catch (error) {
-    logger.error('Update ad error:', error);
-    res.status(500).json({ status: 'error', message: 'Failed to update ad' });
-  }
-});
-
 module.exports = router;

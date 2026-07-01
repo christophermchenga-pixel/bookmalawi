@@ -26,7 +26,7 @@ router.post('/', authMiddleware, customerMiddleware, async (req, res) => {
       [req.user.userId, accommodationId]
     );
 
-    logger.info(`Item added to wishlist: accommodation ${accommodationId}`);
+    logger.info(`Item added to wishlist`);
 
     res.status(201).json({
       status: 'success',
@@ -78,7 +78,7 @@ router.delete('/:wishlistId', authMiddleware, customerMiddleware, async (req, re
       [wishlistId, req.user.userId]
     );
 
-    logger.info(`Item removed from wishlist: ${wishlistId}`);
+    logger.info(`Item removed from wishlist`);
 
     res.json({
       status: 'success',

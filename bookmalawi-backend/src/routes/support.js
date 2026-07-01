@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
 const { authMiddleware } = require('../middleware/auth');
-const { v4: uuidv4 } = require('uuid');
 const winston = require('winston');
 
 const logger = winston.createLogger({
@@ -69,27 +68,6 @@ router.get('/tickets', authMiddleware, async (req, res) => {
   } catch (error) {
     logger.error('Get tickets error:', error);
     res.status(500).json({ status: 'error', message: 'Failed to fetch tickets' });
-  }
-});
-
-// Send chat message (Socket.io in server.js)
-router.post('/chat', authMiddleware, async (req, res) => {
-  try {
-    const { ticketId, message } = req.body;
-
-    if (!ticketId || !message) {
-      return res.status(400).json({ status: 'error', message: 'Ticket ID and message required' });
-    }
-
-    logger.info(`Chat message sent for ticket ${ticketId}`);
-
-    res.json({
-      status: 'success',
-      message: 'Message sent successfully'
-    });
-  } catch (error) {
-    logger.error('Send chat error:', error);
-    res.status(500).json({ status: 'error', message: 'Failed to send message' });
   }
 });
 

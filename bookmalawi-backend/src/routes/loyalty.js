@@ -32,7 +32,7 @@ router.get('/points', authMiddleware, async (req, res) => {
 // Redeem points
 router.post('/redeem', authMiddleware, async (req, res) => {
   try {
-    const { points, discountCode } = req.body;
+    const { points } = req.body;
 
     if (!points || points <= 0) {
       return res.status(400).json({ status: 'error', message: 'Invalid points amount' });
@@ -54,14 +54,14 @@ router.post('/redeem', authMiddleware, async (req, res) => {
     }
 
     const newBalance = loyalty.points_balance - points;
-    const discountAmount = (points * 100) / 1000; // 1 point = 100 MWK
+    const discountAmount = (points * 100) / 1000;
 
     await pool.query(
       'UPDATE loyalty_points SET points_balance = $1 WHERE user_id = $2',
       [newBalance, req.user.userId]
     );
 
-    logger.info(`Points redeemed for user ${req.user.userId}: ${points} points`);
+    logger.info(`Points redeemed: ${points}`);
 
     res.json({
       status: 'success',
